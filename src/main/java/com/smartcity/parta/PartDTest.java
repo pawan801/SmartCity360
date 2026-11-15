@@ -50,6 +50,14 @@ public static SharedStreetlight getSharedStreetlight(String model, int wattage, 
       }
       return light;
   }
+
+  public static ArrayList<SharedStreetlight> getPool() {
+      return pool;
+  }
+
+  public static int getPoolSize() {
+      return pool.size();
+  }
 }
 
 class Streetlight extends AbstractStreetlight{
@@ -79,6 +87,26 @@ class Streetlight extends AbstractStreetlight{
         System.out.println("Brightness: " + this.brightness + "%");
         System.out.println("Shared Instance Ref: " + this.sharedStreetlight);
         System.out.println("---------------------------------------------");
+    }
+
+    public String getId() {
+        return id;
+    }
+
+    public double getLatitude() {
+        return latitude;
+    }
+
+    public double getLongitude() {
+        return longitude;
+    }
+
+    public int getBrightness() {
+        return brightness;
+    }
+
+    public SharedStreetlight getSharedStreetlight() {
+        return sharedStreetlight;
     }
 }
 

@@ -1,0 +1,1257 @@
+<!DOCTYPE html>
+<html lang="en" class="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>SmartCity360 - Design Patterns Control Center</title>
+
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          colors: {
+            brand: {
+              50: '#ecfeff',
+              100: '#cffafe',
+              500: '#06b6d4',
+              600: '#0891b2',
+              700: '#0e7490',
+              900: '#164e63',
+            }
+          }
+        }
+      }
+    }
+  </script>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600;700&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap');
+    body {
+      font-family: 'Plus Jakarta Sans', sans-serif;
+    }
+    code, pre, .font-mono {
+      font-family: 'JetBrains Mono', monospace;
+    }
+    .custom-scrollbar::-webkit-scrollbar {
+      width: 6px;
+      height: 6px;
+    }
+    .custom-scrollbar::-webkit-scrollbar-track {
+      background: #0f172a;
+    }
+    .custom-scrollbar::-webkit-scrollbar-thumb {
+      background: #334155;
+      border-radius: 4px;
+    }
+    .custom-scrollbar::-webkit-scrollbar-thumb:hover {
+      background: #475569;
+    }
+    .pulse-glow {
+      animation: pulseGlow 2s infinite;
+    }
+    @keyframes pulseGlow {
+      0%, 100% { opacity: 0.8; transform: scale(1); }
+      50% { opacity: 1; transform: scale(1.03); }
+    }
+  </style>
+</head>
+<body class="bg-slate-950 text-slate-100 min-h-screen flex flex-col custom-scrollbar">
+
+
+  <header class="bg-slate-900/90 backdrop-blur-md border-b border-slate-800 sticky top-0 z-50">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
+      <div class="flex items-center space-x-3">
+        <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-cyan-500 to-emerald-400 flex items-center justify-center shadow-lg shadow-cyan-500/20">
+          <svg class="w-6 h-6 text-slate-950" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4" />
+          </svg>
+        </div>
+        <div>
+          <div class="flex items-center space-x-2">
+            <h1 class="text-xl font-extrabold tracking-tight text-white">SmartCity<span class="text-cyan-400">360</span></h1>
+            <span class="text-[10px] uppercase font-bold tracking-wider px-2 py-0.5 rounded-full bg-cyan-950/80 text-cyan-300 border border-cyan-800/60">Core Java</span>
+          </div>
+          <p class="text-xs text-slate-400">GoF Design Patterns Architecture Platform</p>
+        </div>
+      </div>
+
+
+      <div class="hidden md:flex items-center space-x-4">
+        <div class="flex items-center space-x-2 px-3 py-1.5 rounded-lg bg-slate-800/80 border border-slate-700/80 text-xs">
+          <span class="relative flex h-2.5 w-2.5">
+            <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
+            <span class="relative inline-flex rounded-full h-2.5 w-2.5 bg-emerald-500"></span>
+          </span>
+          <span class="text-slate-300 font-medium">HttpServer: <span class="text-emerald-400 font-mono">Port 8080</span></span>
+        </div>
+        <div class="flex items-center space-x-2 px-3 py-1.5 rounded-lg bg-slate-800/80 border border-slate-700/80 text-xs">
+          <svg class="w-3.5 h-3.5 text-cyan-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 7v10c0 2 1.5 3 3.5 3h9c2 0 3.5-1 3.5-3V7M4 7c0-2 1.5-3 3.5-3h9c2 0 3.5 1 3.5 3M4 7h16" />
+          </svg>
+          <span class="text-slate-300 font-medium">Database: <span class="text-cyan-400 font-mono">H2 Embedded</span></span>
+        </div>
+      </div>
+    </div>
+
+
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 border-t border-slate-800/60">
+      <nav class="flex space-x-1 sm:space-x-3 overflow-x-auto py-2" id="patternTabs">
+        <button onclick="switchTab('partA')" id="tabBtn-partA" class="tab-button active-tab flex items-center space-x-2 px-4 py-2 rounded-lg text-sm font-semibold transition-all">
+          <span class="w-5 h-5 rounded-md bg-cyan-500/20 text-cyan-400 flex items-center justify-center text-xs font-mono font-bold">A</span>
+          <span>Decorator (Security)</span>
+        </button>
+        <button onclick="switchTab('partB')" id="tabBtn-partB" class="tab-button flex items-center space-x-2 px-4 py-2 rounded-lg text-sm font-semibold text-slate-400 hover:text-slate-200 transition-all">
+          <span class="w-5 h-5 rounded-md bg-emerald-500/20 text-emerald-400 flex items-center justify-center text-xs font-mono font-bold">B</span>
+          <span>Composite (Zones)</span>
+        </button>
+        <button onclick="switchTab('partC')" id="tabBtn-partC" class="tab-button flex items-center space-x-2 px-4 py-2 rounded-lg text-sm font-semibold text-slate-400 hover:text-slate-200 transition-all">
+          <span class="w-5 h-5 rounded-md bg-amber-500/20 text-amber-400 flex items-center justify-center text-xs font-mono font-bold">C</span>
+          <span>Chain of Resp (Grievances)</span>
+        </button>
+        <button onclick="switchTab('partD')" id="tabBtn-partD" class="tab-button flex items-center space-x-2 px-4 py-2 rounded-lg text-sm font-semibold text-slate-400 hover:text-slate-200 transition-all">
+          <span class="w-5 h-5 rounded-md bg-violet-500/20 text-violet-400 flex items-center justify-center text-xs font-mono font-bold">D</span>
+          <span>Flyweight (Streetlights)</span>
+        </button>
+        <button onclick="switchTab('partE')" id="tabBtn-partE" class="tab-button flex items-center space-x-2 px-4 py-2 rounded-lg text-sm font-semibold text-slate-400 hover:text-slate-200 transition-all">
+          <span class="w-5 h-5 rounded-md bg-pink-500/20 text-pink-400 flex items-center justify-center text-xs font-mono font-bold">E</span>
+          <span>Interpreter (AST Quota)</span>
+        </button>
+      </nav>
+    </div>
+  </header>
+
+
+  <main class="flex-1 max-w-7xl w-full mx-auto p-4 sm:p-6 lg:p-8">
+
+
+    <div id="tab-partA" class="tab-content space-y-6">
+      <!-- Header Banner -->
+      <div class="bg-gradient-to-r from-cyan-950/60 to-slate-900 border border-cyan-800/40 rounded-2xl p-6 relative overflow-hidden">
+        <div class="relative z-10 flex flex-col md:flex-row md:items-center justify-between gap-4">
+          <div>
+            <div class="inline-flex items-center space-x-2 px-3 py-1 rounded-full bg-cyan-900/60 text-cyan-300 text-xs font-semibold mb-2 border border-cyan-700/50">
+              <span>GoF Pattern: Structural • Decorator</span>
+            </div>
+            <h2 class="text-2xl font-bold text-white">Dynamic Security Wrappers for Data Streams</h2>
+            <p class="text-sm text-slate-300 mt-1 max-w-2xl">
+              Transparently attach dynamic security and processing layers (Encryption, Authentication, Compression) onto the raw energy meter data stream without modifying the core telemetry source.
+            </p>
+          </div>
+          <div class="text-right">
+            <span class="text-xs text-slate-400 uppercase tracking-wider font-semibold">Active Pipeline</span>
+            <div id="partA-badge" class="mt-1 px-3 py-1.5 rounded-lg bg-cyan-900/40 border border-cyan-700 text-cyan-300 font-mono text-xs">
+              Raw Stream
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
+
+        <div class="lg:col-span-5 bg-slate-900 border border-slate-800 rounded-2xl p-6 space-y-5">
+          <h3 class="text-lg font-bold text-white flex items-center space-x-2">
+            <svg class="w-5 h-5 text-cyan-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6V4m0 2a2 2 0 100 4m0-4a2 2 0 110 4m-6 8a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4m6 6v10m6-2a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4" />
+            </svg>
+            <span>Telemetry Pipeline Configurator</span>
+          </h3>
+
+          <div>
+            <label class="block text-xs font-semibold text-slate-400 uppercase tracking-wider mb-2">Preset Data Streams</label>
+            <div class="grid grid-cols-2 gap-2">
+              <button onclick="setPartAPreset('Voltage: 230V, Usage: 45.8kWh')" class="px-3 py-1.5 text-xs bg-slate-800 hover:bg-slate-700 rounded-lg text-slate-300 border border-slate-700 transition">
+                ⚡ Grid Substation 1
+              </button>
+              <button onclick="setPartAPreset('Voltage: 400V, Usage: 128.5kWh, Harmonic: 1.2%')" class="px-3 py-1.5 text-xs bg-slate-800 hover:bg-slate-700 rounded-lg text-slate-300 border border-slate-700 transition">
+                🏭 Industrial Feeder
+              </button>
+            </div>
+          </div>
+
+          <div>
+            <label for="partA-input" class="block text-xs font-semibold text-slate-400 uppercase tracking-wider mb-2">Raw Energy Telemetry Data</label>
+            <textarea id="partA-input" rows="3" class="w-full bg-slate-950 border border-slate-700 rounded-xl p-3 text-sm font-mono text-cyan-300 focus:outline-none focus:border-cyan-500">Voltage: 230V, Usage: 45.8kWh</textarea>
+          </div>
+
+
+          <div class="space-y-3 pt-2">
+            <span class="block text-xs font-semibold text-slate-400 uppercase tracking-wider">Select Decorator Layers</span>
+
+            <label class="flex items-center justify-between p-3 rounded-xl bg-slate-950/80 border border-slate-800 hover:border-slate-700 cursor-pointer transition">
+              <div class="flex items-center space-x-3">
+                <span class="w-8 h-8 rounded-lg bg-cyan-950 text-cyan-400 flex items-center justify-center font-bold text-xs">🔒</span>
+                <div>
+                  <span class="text-sm font-semibold text-white block">EncryptionDecorator</span>
+                  <span class="text-xs text-slate-400">Wraps with AES-256 telemetry cipher</span>
+                </div>
+              </div>
+              <input type="checkbox" id="partA-encrypt" checked class="w-5 h-5 accent-cyan-500 rounded cursor-pointer" onchange="updatePartAPipelinePreview()">
+            </label>
+
+            <label class="flex items-center justify-between p-3 rounded-xl bg-slate-950/80 border border-slate-800 hover:border-slate-700 cursor-pointer transition">
+              <div class="flex items-center space-x-3">
+                <span class="w-8 h-8 rounded-lg bg-emerald-950 text-emerald-400 flex items-center justify-center font-bold text-xs">🛡️</span>
+                <div>
+                  <span class="text-sm font-semibold text-white block">AuthenticationDecorator</span>
+                  <span class="text-xs text-slate-400">Attaches municipal cryptographic signature</span>
+                </div>
+              </div>
+              <input type="checkbox" id="partA-auth" checked class="w-5 h-5 accent-cyan-500 rounded cursor-pointer" onchange="updatePartAPipelinePreview()">
+            </label>
+
+            <label class="flex items-center justify-between p-3 rounded-xl bg-slate-950/80 border border-slate-800 hover:border-slate-700 cursor-pointer transition">
+              <div class="flex items-center space-x-3">
+                <span class="w-8 h-8 rounded-lg bg-amber-950 text-amber-400 flex items-center justify-center font-bold text-xs">🗜️</span>
+                <div>
+                  <span class="text-sm font-semibold text-white block">CompressionDecorator</span>
+                  <span class="text-xs text-slate-400">Compresses telemetry bandwidth stream</span>
+                </div>
+              </div>
+              <input type="checkbox" id="partA-compress" checked class="w-5 h-5 accent-cyan-500 rounded cursor-pointer" onchange="updatePartAPipelinePreview()">
+            </label>
+          </div>
+
+          <button onclick="executePartAPipeline()" class="w-full py-3 px-4 rounded-xl bg-gradient-to-r from-cyan-500 to-blue-600 hover:from-cyan-400 hover:to-blue-500 text-slate-950 font-bold text-sm tracking-wide shadow-lg shadow-cyan-500/25 transition flex items-center justify-center space-x-2">
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3" />
+            </svg>
+            <span>Execute Decorator Pipeline & Save Log</span>
+          </button>
+        </div>
+
+
+        <div class="lg:col-span-7 space-y-6">
+
+          <div class="bg-slate-900 border border-slate-800 rounded-2xl p-6">
+            <h4 class="text-xs font-semibold text-slate-400 uppercase tracking-wider mb-4">Pipeline Wrapping Order</h4>
+            <div id="partA-visualizer" class="flex flex-wrap items-center gap-2 p-4 bg-slate-950/80 rounded-xl border border-slate-800/80 font-mono text-xs">
+
+            </div>
+          </div>
+
+
+          <div class="bg-slate-900 border border-slate-800 rounded-2xl p-6 space-y-3">
+            <div class="flex items-center justify-between">
+              <h4 class="text-xs font-semibold text-slate-400 uppercase tracking-wider">Processed Stream Output</h4>
+              <span id="partA-status" class="text-xs text-emerald-400 font-medium">Ready</span>
+            </div>
+            <div id="partA-output" class="p-4 bg-slate-950 rounded-xl border border-slate-800 font-mono text-sm text-emerald-300 break-words min-h-[4rem] flex items-center">
+              Raw Energy Data : DataStream Data Encrypted With Data Authentication With Data Compression
+            </div>
+          </div>
+
+
+          <div class="bg-slate-900 border border-slate-800 rounded-2xl p-6 space-y-4">
+            <div class="flex items-center justify-between">
+              <div>
+                <h4 class="text-sm font-bold text-white">H2 Telemetry Audit Logs</h4>
+                <p class="text-xs text-slate-400">Persisted in database table: <code class="text-cyan-400">sensor_telemetry_logs</code></p>
+              </div>
+              <button onclick="fetchPartALogs()" class="p-2 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-300 text-xs flex items-center space-x-1 border border-slate-700 transition">
+                <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
+                </svg>
+                <span>Refresh</span>
+              </button>
+            </div>
+            <div class="overflow-x-auto max-h-60 custom-scrollbar">
+              <table class="w-full text-left text-xs">
+                <thead class="text-slate-400 border-b border-slate-800 sticky top-0 bg-slate-900">
+                  <tr>
+                    <th class="py-2 px-3">ID</th>
+                    <th class="py-2 px-3">Decorators</th>
+                    <th class="py-2 px-3">Processed Stream</th>
+                    <th class="py-2 px-3">Timestamp</th>
+                  </tr>
+                </thead>
+                <tbody id="partA-logs-table" class="divide-y divide-slate-800/60 font-mono text-slate-300">
+                  <tr><td colspan="4" class="py-4 text-center text-slate-500">Loading telemetry logs...</td></tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+
+    <div id="tab-partB" class="tab-content hidden space-y-6">
+      <div class="bg-gradient-to-r from-emerald-950/60 to-slate-900 border border-emerald-800/40 rounded-2xl p-6 relative overflow-hidden">
+        <div class="relative z-10 flex flex-col md:flex-row md:items-center justify-between gap-4">
+          <div>
+            <div class="inline-flex items-center space-x-2 px-3 py-1 rounded-full bg-emerald-900/60 text-emerald-300 text-xs font-semibold mb-2 border border-emerald-700/50">
+              <span>GoF Pattern: Structural • Composite</span>
+            </div>
+            <h2 class="text-2xl font-bold text-white">Hierarchical Structure of Smart Zones</h2>
+            <p class="text-sm text-slate-300 mt-1 max-w-2xl">
+              Treat individual buildings and entire composite zones uniformly through the <code class="text-emerald-400 font-mono">SmartZoneComponent</code> interface to calculate and manage city-wide power consumption recursively.
+            </p>
+          </div>
+
+          <div class="p-4 rounded-xl bg-slate-900/90 border border-emerald-700/60 text-right">
+            <span class="text-xs text-slate-400 uppercase tracking-wider font-semibold">Total Metropolitan Power</span>
+            <div class="text-2xl font-extrabold text-emerald-400 font-mono" id="partB-totalPowerHeader">0.0 kW</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
+
+        <div class="lg:col-span-8 bg-slate-900 border border-slate-800 rounded-2xl p-6 space-y-4">
+          <div class="flex items-center justify-between">
+            <h3 class="text-lg font-bold text-white flex items-center space-x-2">
+              <svg class="w-5 h-5 text-emerald-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10" />
+              </svg>
+              <span>Smart Zone Composite Hierarchy</span>
+            </h3>
+            <button onclick="fetchPartBTree()" class="px-3 py-1.5 text-xs bg-slate-800 hover:bg-slate-700 text-slate-300 rounded-lg border border-slate-700 transition">
+              Refresh Tree
+            </button>
+          </div>
+
+          <div id="partB-treeContainer" class="p-4 bg-slate-950 rounded-xl border border-slate-800/80 max-h-[500px] overflow-y-auto custom-scrollbar font-mono text-sm space-y-2">
+
+            <div class="text-slate-500 text-center py-8">Loading city zone hierarchy...</div>
+          </div>
+        </div>
+
+
+        <div class="lg:col-span-4 bg-slate-900 border border-slate-800 rounded-2xl p-6 space-y-4">
+          <h3 class="text-lg font-bold text-white flex items-center space-x-2">
+            <svg class="w-5 h-5 text-emerald-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v3m0 0v3m0-3h3m-3 0H9m12 0a9 9 0 11-18 0 9 9 0 0118 0z" />
+            </svg>
+            <span>Add Zone or Building</span>
+          </h3>
+          <p class="text-xs text-slate-400">Dynamically add leaf or composite components to the active grid model.</p>
+
+          <div class="space-y-4">
+            <div>
+              <label for="partB-parentZone" class="block text-xs font-semibold text-slate-400 uppercase tracking-wider mb-1">Target Parent Zone</label>
+              <select id="partB-parentZone" class="w-full bg-slate-950 border border-slate-700 rounded-xl p-2.5 text-sm text-slate-200 focus:outline-none focus:border-emerald-500">
+
+              </select>
+            </div>
+
+            <div>
+              <label class="block text-xs font-semibold text-slate-400 uppercase tracking-wider mb-1">Component Type</label>
+              <div class="grid grid-cols-2 gap-2">
+                <button type="button" onclick="setPartBComponentType('building')" id="partB-type-building" class="px-3 py-2 rounded-xl text-xs font-bold bg-emerald-600 text-slate-950">
+                  🏢 Building (Leaf)
+                </button>
+                <button type="button" onclick="setPartBComponentType('zone')" id="partB-type-zone" class="px-3 py-2 rounded-xl text-xs font-bold bg-slate-800 text-slate-300">
+                  📁 Sub-Zone (Composite)
+                </button>
+              </div>
+            </div>
+
+            <div>
+              <label for="partB-name" class="block text-xs font-semibold text-slate-400 uppercase tracking-wider mb-1">Component Name</label>
+              <input type="text" id="partB-name" placeholder="e.g. Ocean View Condos" class="w-full bg-slate-950 border border-slate-700 rounded-xl p-2.5 text-sm text-slate-200 focus:outline-none focus:border-emerald-500">
+            </div>
+
+            <div id="partB-power-container">
+              <label for="partB-power" class="block text-xs font-semibold text-slate-400 uppercase tracking-wider mb-1">Power Consumption (kW)</label>
+              <input type="number" id="partB-power" value="450.0" step="10" class="w-full bg-slate-950 border border-slate-700 rounded-xl p-2.5 text-sm text-slate-200 focus:outline-none focus:border-emerald-500">
+            </div>
+
+            <button onclick="addComponentToPartB()" class="w-full py-3 px-4 rounded-xl bg-gradient-to-r from-emerald-500 to-teal-600 hover:from-emerald-400 hover:to-teal-500 text-slate-950 font-bold text-sm tracking-wide shadow-lg shadow-emerald-500/25 transition">
+              Insert into Zone Hierarchy
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+
+    <div id="tab-partC" class="tab-content hidden space-y-6">
+      <div class="bg-gradient-to-r from-amber-950/60 to-slate-900 border border-amber-800/40 rounded-2xl p-6 relative overflow-hidden">
+        <div class="relative z-10 flex flex-col md:flex-row md:items-center justify-between gap-4">
+          <div>
+            <div class="inline-flex items-center space-x-2 px-3 py-1 rounded-full bg-amber-900/60 text-amber-300 text-xs font-semibold mb-2 border border-amber-700/50">
+              <span>GoF Pattern: Behavioral • Chain of Responsibility</span>
+            </div>
+            <h2 class="text-2xl font-bold text-white">Escalation of Citizen Complaints</h2>
+            <p class="text-sm text-slate-300 mt-1 max-w-2xl">
+              Decouple request senders from handlers via a linear chain: <code class="text-amber-400 font-mono">FrontlineDeskHandler</code> (Low) &rarr; <code class="text-amber-400 font-mono">DepartmentSupervisorHandler</code> (Medium) &rarr; <code class="text-amber-400 font-mono">MunicipalManagerHandler</code> (High).
+            </p>
+          </div>
+        </div>
+      </div>
+
+
+      <div class="bg-slate-900 border border-slate-800 rounded-2xl p-6 space-y-4">
+        <h3 class="text-xs font-semibold text-slate-400 uppercase tracking-wider">Active Handler Chain Topology</h3>
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-4 relative">
+
+          <div id="chain-node-frontline" class="p-4 rounded-xl bg-slate-950 border border-slate-800 transition duration-300 relative">
+            <div class="flex items-center justify-between mb-2">
+              <span class="text-xs font-mono text-emerald-400 px-2 py-0.5 rounded bg-emerald-950/60 border border-emerald-800">Tier 1: Low</span>
+              <span class="w-2.5 h-2.5 rounded-full bg-slate-700" id="chain-dot-frontline"></span>
+            </div>
+            <h4 class="font-bold text-white text-base">Frontline Desk</h4>
+            <p class="text-xs text-slate-400 mt-1">Handles local streetlights, minor public complaints.</p>
+          </div>
+
+
+          <div id="chain-node-supervisor" class="p-4 rounded-xl bg-slate-950 border border-slate-800 transition duration-300 relative">
+            <div class="flex items-center justify-between mb-2">
+              <span class="text-xs font-mono text-amber-400 px-2 py-0.5 rounded bg-amber-950/60 border border-amber-800">Tier 2: Medium</span>
+              <span class="w-2.5 h-2.5 rounded-full bg-slate-700" id="chain-dot-supervisor"></span>
+            </div>
+            <h4 class="font-bold text-white text-base">Department Supervisor</h4>
+            <p class="text-xs text-slate-400 mt-1">Handles sewer leaks, water disruption, operational hazards.</p>
+          </div>
+
+
+          <div id="chain-node-manager" class="p-4 rounded-xl bg-slate-950 border border-slate-800 transition duration-300 relative">
+            <div class="flex items-center justify-between mb-2">
+              <span class="text-xs font-mono text-rose-400 px-2 py-0.5 rounded bg-rose-950/60 border border-rose-800">Tier 3: High</span>
+              <span class="w-2.5 h-2.5 rounded-full bg-slate-700" id="chain-dot-manager"></span>
+            </div>
+            <h4 class="font-bold text-white text-base">Municipal Manager</h4>
+            <p class="text-xs text-slate-400 mt-1">Handles critical industrial gas leaks, grid collapse, emergencies.</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
+
+        <div class="lg:col-span-5 bg-slate-900 border border-slate-800 rounded-2xl p-6 space-y-4">
+          <h3 class="text-lg font-bold text-white">Lodge Citizen Grievance</h3>
+
+          <div>
+            <label class="block text-xs font-semibold text-slate-400 uppercase tracking-wider mb-2">Scenario Presets</label>
+            <div class="flex flex-wrap gap-2">
+              <button onclick="setPartCPreset('LOW')" class="px-2.5 py-1 text-xs bg-emerald-950/60 hover:bg-emerald-900/80 text-emerald-300 rounded border border-emerald-800">
+                Low: Blinking Streetlight
+              </button>
+              <button onclick="setPartCPreset('MEDIUM')" class="px-2.5 py-1 text-xs bg-amber-950/60 hover:bg-amber-900/80 text-amber-300 rounded border border-amber-800">
+                Medium: Sewage Overflow
+              </button>
+              <button onclick="setPartCPreset('HIGH')" class="px-2.5 py-1 text-xs bg-rose-950/60 hover:bg-rose-900/80 text-rose-300 rounded border border-rose-800">
+                High: Gas Leak Alarm
+              </button>
+            </div>
+          </div>
+
+          <div>
+            <label for="partC-id" class="block text-xs font-semibold text-slate-400 uppercase tracking-wider mb-1">Complaint Ticket ID</label>
+            <input type="text" id="partC-id" value="GRV-004" class="w-full bg-slate-950 border border-slate-700 rounded-xl p-2.5 text-sm font-mono text-amber-300">
+          </div>
+
+          <div>
+            <label for="partC-name" class="block text-xs font-semibold text-slate-400 uppercase tracking-wider mb-1">Citizen Full Name</label>
+            <input type="text" id="partC-name" value="Anura Kumara" class="w-full bg-slate-950 border border-slate-700 rounded-xl p-2.5 text-sm text-slate-200">
+          </div>
+
+          <div>
+            <label for="partC-desc" class="block text-xs font-semibold text-slate-400 uppercase tracking-wider mb-1">Incident Description</label>
+            <textarea id="partC-desc" rows="2" class="w-full bg-slate-950 border border-slate-700 rounded-xl p-2.5 text-sm text-slate-200">Main road storm drain overflowing near junction</textarea>
+          </div>
+
+          <div>
+            <label class="block text-xs font-semibold text-slate-400 uppercase tracking-wider mb-1">Severity Level</label>
+            <div class="grid grid-cols-3 gap-2">
+              <label class="cursor-pointer">
+                <input type="radio" name="partC-severity" value="LOW" class="sr-only peer">
+                <div class="p-2 text-center text-xs font-bold rounded-xl border border-slate-700 peer-checked:border-emerald-500 peer-checked:bg-emerald-950/60 peer-checked:text-emerald-300 text-slate-400 transition">
+                  LOW
+                </div>
+              </label>
+              <label class="cursor-pointer">
+                <input type="radio" name="partC-severity" value="MEDIUM" checked class="sr-only peer">
+                <div class="p-2 text-center text-xs font-bold rounded-xl border border-slate-700 peer-checked:border-amber-500 peer-checked:bg-amber-950/60 peer-checked:text-amber-300 text-slate-400 transition">
+                  MEDIUM
+                </div>
+              </label>
+              <label class="cursor-pointer">
+                <input type="radio" name="partC-severity" value="HIGH" class="sr-only peer">
+                <div class="p-2 text-center text-xs font-bold rounded-xl border border-slate-700 peer-checked:border-rose-500 peer-checked:bg-rose-950/60 peer-checked:text-rose-300 text-slate-400 transition">
+                  HIGH
+                </div>
+              </label>
+            </div>
+          </div>
+
+          <button onclick="submitGrievance()" class="w-full py-3 px-4 rounded-xl bg-gradient-to-r from-amber-500 to-orange-600 hover:from-amber-400 hover:to-orange-500 text-slate-950 font-bold text-sm tracking-wide shadow-lg shadow-amber-500/25 transition">
+            Dispatch into Escalation Chain
+          </button>
+        </div>
+
+
+        <div class="lg:col-span-7 space-y-6">
+
+          <div class="bg-slate-900 border border-slate-800 rounded-2xl p-6 space-y-3">
+            <h4 class="text-xs font-semibold text-slate-400 uppercase tracking-wider">Escalation Audit Trail</h4>
+            <div id="partC-trail" class="p-4 bg-slate-950 rounded-xl border border-slate-800 font-mono text-xs text-slate-300 space-y-1 min-h-[5rem]">
+              <span class="text-slate-500">Ready to dispatch grievance...</span>
+            </div>
+          </div>
+
+
+          <div class="bg-slate-900 border border-slate-800 rounded-2xl p-6 space-y-4">
+            <div class="flex items-center justify-between">
+              <div>
+                <h4 class="text-sm font-bold text-white">H2 Grievance Ticket Ledger</h4>
+                <p class="text-xs text-slate-400">Database table: <code class="text-amber-400">grievance_tickets</code></p>
+              </div>
+              <button onclick="fetchPartCTickets()" class="p-2 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-300 text-xs flex items-center space-x-1 border border-slate-700 transition">
+                <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
+                </svg>
+                <span>Refresh</span>
+              </button>
+            </div>
+            <div class="overflow-x-auto max-h-60 custom-scrollbar">
+              <table class="w-full text-left text-xs">
+                <thead class="text-slate-400 border-b border-slate-800 sticky top-0 bg-slate-900">
+                  <tr>
+                    <th class="py-2 px-3">Ticket ID</th>
+                    <th class="py-2 px-3">Citizen</th>
+                    <th class="py-2 px-3">Severity</th>
+                    <th class="py-2 px-3">Resolved By</th>
+                    <th class="py-2 px-3">Created At</th>
+                  </tr>
+                </thead>
+                <tbody id="partC-tickets-table" class="divide-y divide-slate-800/60 font-mono text-slate-300">
+                  <tr><td colspan="5" class="py-4 text-center text-slate-500">Loading tickets...</td></tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+
+    <div id="tab-partD" class="tab-content hidden space-y-6">
+      <div class="bg-gradient-to-r from-violet-950/60 to-slate-900 border border-violet-800/40 rounded-2xl p-6 relative overflow-hidden">
+        <div class="relative z-10 flex flex-col md:flex-row md:items-center justify-between gap-4">
+          <div>
+            <div class="inline-flex items-center space-x-2 px-3 py-1 rounded-full bg-violet-900/60 text-violet-300 text-xs font-semibold mb-2 border border-violet-700/50">
+              <span>GoF Pattern: Structural • Flyweight</span>
+            </div>
+            <h2 class="text-2xl font-bold text-white">Efficient Management of Smart Streetlights</h2>
+            <p class="text-sm text-slate-300 mt-1 max-w-2xl">
+              Thousands of streetlights share identical intrinsic specifications (Model, Wattage, Color Temperature) via <code class="text-violet-400 font-mono">SharedStreetlightPool</code>, keeping only extrinsic coordinates & brightness unique.
+            </p>
+          </div>
+
+          <div class="p-4 rounded-xl bg-slate-900/90 border border-violet-700/60 text-right">
+            <span class="text-xs text-slate-400 uppercase tracking-wider font-semibold">Memory Reduction</span>
+            <div class="text-2xl font-extrabold text-violet-400 font-mono" id="partD-savingsHeader">0.0%</div>
+          </div>
+        </div>
+      </div>
+
+
+      <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
+        <div class="p-5 rounded-2xl bg-slate-900 border border-slate-800">
+          <span class="text-xs font-semibold text-slate-400 uppercase tracking-wider">Total Streetlight Objects</span>
+          <div class="text-3xl font-extrabold text-white mt-1 font-mono" id="partD-totalCount">0</div>
+          <span class="text-[11px] text-slate-500 mt-1 block">Extrinsic state instances</span>
+        </div>
+        <div class="p-5 rounded-2xl bg-slate-900 border border-slate-800">
+          <span class="text-xs font-semibold text-slate-400 uppercase tracking-wider">Shared Pool Instances</span>
+          <div class="text-3xl font-extrabold text-cyan-400 mt-1 font-mono" id="partD-poolCount">0</div>
+          <span class="text-[11px] text-slate-500 mt-1 block">Distinct SharedStreetlight objects in RAM</span>
+        </div>
+        <div class="p-5 rounded-2xl bg-slate-900 border border-slate-800">
+          <span class="text-xs font-semibold text-slate-400 uppercase tracking-wider">Unshared Traditional RAM</span>
+          <div class="text-2xl font-extrabold text-rose-400 mt-1 font-mono" id="partD-unsharedBytes">0 KB</div>
+          <span class="text-[11px] text-slate-500 mt-1 block">Without Flyweight pattern</span>
+        </div>
+        <div class="p-5 rounded-2xl bg-slate-900 border border-slate-800">
+          <span class="text-xs font-semibold text-slate-400 uppercase tracking-wider">Flyweight Shared RAM</span>
+          <div class="text-2xl font-extrabold text-emerald-400 mt-1 font-mono" id="partD-sharedBytes">0 KB</div>
+          <span class="text-[11px] text-emerald-400/80 mt-1 block">With Flyweight pool reuse</span>
+        </div>
+      </div>
+
+      <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
+
+        <div class="lg:col-span-4 bg-slate-900 border border-slate-800 rounded-2xl p-6 space-y-4">
+          <h3 class="text-lg font-bold text-white">Deploy Smart Streetlight</h3>
+
+          <div class="space-y-3">
+            <div>
+              <label for="partD-id" class="block text-xs font-semibold text-slate-400 uppercase tracking-wider mb-1">Streetlight ID</label>
+              <input type="text" id="partD-id" value="SL-COL-005" class="w-full bg-slate-950 border border-slate-700 rounded-xl p-2.5 text-sm font-mono text-violet-300">
+            </div>
+
+            <div>
+              <label for="partD-model" class="block text-xs font-semibold text-slate-400 uppercase tracking-wider mb-1">Hardware Model (Intrinsic)</label>
+              <select id="partD-model" onchange="syncPartDModelDefaults()" class="w-full bg-slate-950 border border-slate-700 rounded-xl p-2.5 text-sm text-slate-200 focus:outline-none focus:border-violet-500">
+                <option value="LED-LUMEN-60W">LED-LUMEN-60W (60W, 4000K)</option>
+                <option value="HIGH-MAST-150W">HIGH-MAST-150W (150W, 5000K)</option>
+                <option value="SOLAR-HYBRID-80W">SOLAR-HYBRID-80W (80W, 3000K)</option>
+              </select>
+            </div>
+
+            <div class="grid grid-cols-2 gap-2">
+              <div>
+                <label for="partD-lat" class="block text-xs font-semibold text-slate-400 uppercase tracking-wider mb-1">Latitude</label>
+                <input type="number" id="partD-lat" value="6.9290" step="0.0001" class="w-full bg-slate-950 border border-slate-700 rounded-xl p-2 text-xs font-mono text-slate-200">
+              </div>
+              <div>
+                <label for="partD-lng" class="block text-xs font-semibold text-slate-400 uppercase tracking-wider mb-1">Longitude</label>
+                <input type="number" id="partD-lng" value="79.8630" step="0.0001" class="w-full bg-slate-950 border border-slate-700 rounded-xl p-2 text-xs font-mono text-slate-200">
+              </div>
+            </div>
+
+            <div>
+              <div class="flex items-center justify-between mb-1">
+                <label for="partD-bright" class="text-xs font-semibold text-slate-400 uppercase tracking-wider">Brightness</label>
+                <span id="partD-bright-val" class="text-xs font-mono text-violet-400">85%</span>
+              </div>
+              <input type="range" id="partD-bright" min="0" max="100" value="85" oninput="document.getElementById('partD-bright-val').innerText = this.value + '%'" class="w-full accent-violet-500">
+            </div>
+
+            <button onclick="registerStreetlight()" class="w-full py-3 px-4 rounded-xl bg-gradient-to-r from-violet-500 to-indigo-600 hover:from-violet-400 hover:to-indigo-500 text-slate-950 font-bold text-sm tracking-wide shadow-lg shadow-violet-500/25 transition">
+              Instantiate via Flyweight Pool
+            </button>
+
+
+            <button onclick="simulateMassiveStreetlights(500)" class="w-full py-2.5 px-4 rounded-xl bg-slate-800 hover:bg-slate-700 text-violet-300 font-semibold text-xs border border-violet-800/60 transition flex items-center justify-center space-x-2">
+              <span>⚡ Stress-Test: Simulate 500 Lights</span>
+            </button>
+          </div>
+        </div>
+
+
+        <div class="lg:col-span-8 bg-slate-900 border border-slate-800 rounded-2xl p-6 space-y-4">
+          <div class="flex items-center justify-between">
+            <div>
+              <h4 class="text-sm font-bold text-white">Registered Streetlight Fleet & Memory Pointers</h4>
+              <p class="text-xs text-slate-400">Notice streetlights with the same model share the <span class="text-violet-400 font-bold">exact same memory reference hash</span>!</p>
+            </div>
+            <button onclick="fetchPartDStreetlights()" class="p-2 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-300 text-xs flex items-center space-x-1 border border-slate-700 transition">
+              <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
+              </svg>
+              <span>Refresh</span>
+            </button>
+          </div>
+
+          <div class="overflow-x-auto max-h-96 custom-scrollbar">
+            <table class="w-full text-left text-xs">
+              <thead class="text-slate-400 border-b border-slate-800 sticky top-0 bg-slate-900">
+                <tr>
+                  <th class="py-2 px-3">Light ID</th>
+                  <th class="py-2 px-3">Model</th>
+                  <th class="py-2 px-3">Wattage</th>
+                  <th class="py-2 px-3">GPS Location</th>
+                  <th class="py-2 px-3">Brightness</th>
+                  <th class="py-2 px-3">Shared Instance Hash</th>
+                </tr>
+              </thead>
+              <tbody id="partD-table" class="divide-y divide-slate-800/60 font-mono text-slate-300">
+                <tr><td colspan="6" class="py-4 text-center text-slate-500">Loading streetlight inventory...</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+
+
+    <div id="tab-partE" class="tab-content hidden space-y-6">
+      <div class="bg-gradient-to-r from-pink-950/60 to-slate-900 border border-pink-800/40 rounded-2xl p-6 relative overflow-hidden">
+        <div class="relative z-10 flex flex-col md:flex-row md:items-center justify-between gap-4">
+          <div>
+            <div class="inline-flex items-center space-x-2 px-3 py-1 rounded-full bg-pink-900/60 text-pink-300 text-xs font-semibold mb-2 border border-pink-700/50">
+              <span>GoF Pattern: Behavioral • Interpreter</span>
+            </div>
+            <h2 class="text-2xl font-bold text-white">Interpreting City Policies Defined in DSL</h2>
+            <p class="text-sm text-slate-300 mt-1 max-w-2xl">
+              Dynamically parse and evaluate municipal energy quota rules using an Abstract Syntax Tree (AST) constructed with <code class="text-pink-400 font-mono">TerminalExpression</code> and <code class="text-pink-400 font-mono">NonTerminalExpression</code> arithmetic nodes.
+            </p>
+          </div>
+
+          <div class="p-4 rounded-xl bg-slate-900/90 border border-pink-700/60 text-right">
+            <span class="text-xs text-slate-400 uppercase tracking-wider font-semibold">Remaining Quota Margin</span>
+            <div class="text-2xl font-extrabold text-pink-400 font-mono" id="partE-marginHeader">150 kW</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
+
+        <div class="lg:col-span-4 bg-slate-900 border border-slate-800 rounded-2xl p-6 space-y-4">
+          <h3 class="text-lg font-bold text-white">Municipal Quota Parameters</h3>
+
+          <div class="space-y-3">
+            <div>
+              <label for="partE-quota" class="block text-xs font-semibold text-slate-400 uppercase tracking-wider mb-1">Allowed Municipal Quota (kW)</label>
+              <input type="number" id="partE-quota" value="800" step="50" class="w-full bg-slate-950 border border-slate-700 rounded-xl p-2.5 text-sm font-mono text-pink-300">
+            </div>
+
+            <div>
+              <label for="partE-zoneA" class="block text-xs font-semibold text-slate-400 uppercase tracking-wider mb-1">Zone A Load (Commercial) (kW)</label>
+              <input type="number" id="partE-zoneA" value="120" step="10" class="w-full bg-slate-950 border border-slate-700 rounded-xl p-2.5 text-sm font-mono text-slate-200">
+            </div>
+
+            <div>
+              <label for="partE-zoneB" class="block text-xs font-semibold text-slate-400 uppercase tracking-wider mb-1">Zone B Load (Civic & Health) (kW)</label>
+              <input type="number" id="partE-zoneB" value="180" step="10" class="w-full bg-slate-950 border border-slate-700 rounded-xl p-2.5 text-sm font-mono text-slate-200">
+            </div>
+
+            <div>
+              <label for="partE-zoneC" class="block text-xs font-semibold text-slate-400 uppercase tracking-wider mb-1">Zone C Load (Harbor & Port) (kW)</label>
+              <input type="number" id="partE-zoneC" value="350" step="10" class="w-full bg-slate-950 border border-slate-700 rounded-xl p-2.5 text-sm font-mono text-slate-200">
+            </div>
+
+            <button onclick="evaluateInterpreterAST()" class="w-full py-3 px-4 rounded-xl bg-gradient-to-r from-pink-500 to-rose-600 hover:from-pink-400 hover:to-rose-500 text-slate-950 font-bold text-sm tracking-wide shadow-lg shadow-pink-500/25 transition">
+              Evaluate Quota Rule AST
+            </button>
+          </div>
+        </div>
+
+
+        <div class="lg:col-span-8 space-y-6">
+
+          <div class="bg-slate-900 border border-slate-800 rounded-2xl p-6 space-y-4">
+            <div class="flex items-center justify-between">
+              <h4 class="text-xs font-semibold text-slate-400 uppercase tracking-wider">Abstract Syntax Tree (AST) Hierarchy</h4>
+              <span id="partE-complianceBadge" class="px-2.5 py-1 rounded text-xs font-mono font-bold bg-emerald-950 text-emerald-300 border border-emerald-800">
+                WITHIN_QUOTA
+              </span>
+            </div>
+
+            <div id="partE-astContainer" class="p-6 bg-slate-950 rounded-xl border border-slate-800 font-mono text-xs flex flex-col items-center justify-center space-y-4">
+
+            </div>
+          </div>
+
+
+          <div class="bg-slate-900 border border-slate-800 rounded-2xl p-6 space-y-3">
+            <h4 class="text-xs font-semibold text-slate-400 uppercase tracking-wider">Step-by-Step Expression Interpretation</h4>
+            <div id="partE-steps" class="p-4 bg-slate-950 rounded-xl border border-slate-800 font-mono text-xs text-pink-300 space-y-2">
+              <!-- Steps rendered here -->
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </main>
+
+
+  <footer class="bg-slate-900 border-t border-slate-800 py-6 text-center text-xs text-slate-500">
+    <p>SmartCity360 Architectural Management System &bull; Java Institute for Advanced Technology &bull; Pure Java Standard Library + Embedded H2</p>
+  </footer>
+
+  <script>
+
+    function switchTab(tabId) {
+      document.querySelectorAll('.tab-content').forEach(el => el.classList.add('hidden'));
+      document.getElementById('tab-' + tabId).classList.remove('hidden');
+
+      document.querySelectorAll('.tab-button').forEach(btn => {
+        btn.classList.remove('active-tab', 'text-white', 'bg-slate-800');
+        btn.classList.add('text-slate-400');
+      });
+
+      const activeBtn = document.getElementById('tabBtn-' + tabId);
+      activeBtn.classList.add('active-tab', 'text-white', 'bg-slate-800');
+      activeBtn.classList.remove('text-slate-400');
+
+      if (tabId === 'partA') fetchPartALogs();
+      if (tabId === 'partB') fetchPartBTree();
+      if (tabId === 'partC') fetchPartCTickets();
+      if (tabId === 'partD') fetchPartDStreetlights();
+      if (tabId === 'partE') evaluateInterpreterAST();
+    }
+
+
+    function setPartAPreset(text) {
+      document.getElementById('partA-input').value = text;
+      updatePartAPipelinePreview();
+    }
+
+    function updatePartAPipelinePreview() {
+      const enc = document.getElementById('partA-encrypt').checked;
+      const auth = document.getElementById('partA-auth').checked;
+      const comp = document.getElementById('partA-compress').checked;
+
+      const container = document.getElementById('partA-visualizer');
+      container.innerHTML = `
+        <div class="px-3 py-1.5 rounded-lg bg-slate-800 border border-slate-700 text-cyan-300">
+          EnergyMeterDataStream (Core)
+        </div>
+      `;
+
+      if (enc) {
+        container.innerHTML += `
+          <span class="text-cyan-500">&rarr;</span>
+          <div class="px-3 py-1.5 rounded-lg bg-cyan-950/80 border border-cyan-700 text-cyan-300">
+            🔒 EncryptionDecorator
+          </div>
+        `;
+      }
+      if (auth) {
+        container.innerHTML += `
+          <span class="text-emerald-500">&rarr;</span>
+          <div class="px-3 py-1.5 rounded-lg bg-emerald-950/80 border border-emerald-700 text-emerald-300">
+            🛡️ AuthenticationDecorator
+          </div>
+        `;
+      }
+      if (comp) {
+        container.innerHTML += `
+          <span class="text-amber-500">&rarr;</span>
+          <div class="px-3 py-1.5 rounded-lg bg-amber-950/80 border border-amber-700 text-amber-300">
+            🗜️ CompressionDecorator
+          </div>
+        `;
+      }
+      container.innerHTML += `
+        <span class="text-slate-500">&rarr;</span>
+        <div class="px-3 py-1.5 rounded-lg bg-emerald-900/60 border border-emerald-600 text-emerald-300">
+          Target Output
+        </div>
+      `;
+    }
+
+    async function executePartAPipeline() {
+      const data = document.getElementById('partA-input').value;
+      const encryption = document.getElementById('partA-encrypt').checked;
+      const authentication = document.getElementById('partA-auth').checked;
+      const compression = document.getElementById('partA-compress').checked;
+
+      const statusEl = document.getElementById('partA-status');
+      statusEl.innerText = "Processing...";
+
+      try {
+        const res = await fetch('/api/part-a', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ data, encryption, authentication, compression })
+        });
+        const result = await res.json();
+        if (result.success) {
+          document.getElementById('partA-output').innerText = result.processedOutput;
+          document.getElementById('partA-badge').innerText = result.decoratorSummary;
+          statusEl.innerText = "Processed & Saved to H2!";
+          fetchPartALogs();
+        }
+      } catch (err) {
+        statusEl.innerText = "Error: " + err.message;
+      }
+    }
+
+    async function fetchPartALogs() {
+      try {
+        const res = await fetch('/api/part-a');
+        const data = await res.json();
+        const tbody = document.getElementById('partA-logs-table');
+        if (data.success && data.logs.length > 0) {
+          tbody.innerHTML = data.logs.map(log => `
+            <tr class="hover:bg-slate-800/40">
+              <td class="py-2 px-3 text-cyan-400">#${log.id}</td>
+              <td class="py-2 px-3"><span class="px-2 py-0.5 rounded bg-slate-800 border border-slate-700 text-[10px] text-slate-300">${escapeHtml(log.decoratorsApplied)}</span></td>
+              <td class="py-2 px-3 text-emerald-300 max-w-xs truncate" title="${escapeHtml(log.processedOutput)}">${escapeHtml(log.processedOutput)}</td>
+              <td class="py-2 px-3 text-slate-500">${escapeHtml(log.createdAt || '')}</td>
+            </tr>
+          `).join('');
+        } else {
+          tbody.innerHTML = `<tr><td colspan="4" class="py-4 text-center text-slate-500">No logs found</td></tr>`;
+        }
+      } catch (err) {
+        console.error("fetchPartALogs err", err);
+      }
+    }
+
+
+    let partBComponentType = 'building';
+    function setPartBComponentType(type) {
+      partBComponentType = type;
+      const bBtn = document.getElementById('partB-type-building');
+      const zBtn = document.getElementById('partB-type-zone');
+      const powerContainer = document.getElementById('partB-power-container');
+
+      if (type === 'building') {
+        bBtn.className = "px-3 py-2 rounded-xl text-xs font-bold bg-emerald-600 text-slate-950";
+        zBtn.className = "px-3 py-2 rounded-xl text-xs font-bold bg-slate-800 text-slate-300";
+        powerContainer.classList.remove('hidden');
+      } else {
+        zBtn.className = "px-3 py-2 rounded-xl text-xs font-bold bg-emerald-600 text-slate-950";
+        bBtn.className = "px-3 py-2 rounded-xl text-xs font-bold bg-slate-800 text-slate-300";
+        powerContainer.classList.add('hidden');
+      }
+    }
+
+    async function fetchPartBTree() {
+      try {
+        const res = await fetch('/api/part-b');
+        const data = await res.json();
+        if (data.success) {
+          document.getElementById('partB-totalPowerHeader').innerText = data.totalPowerConsumption.toFixed(1) + " kW";
+          const container = document.getElementById('partB-treeContainer');
+          container.innerHTML = renderTreeNode(data.hierarchy, 0);
+
+
+          const dropdown = document.getElementById('partB-parentZone');
+          dropdown.innerHTML = "";
+          collectZoneNames(data.hierarchy).forEach(zone => {
+            dropdown.innerHTML += `<option value="${escapeHtml(zone)}">${escapeHtml(zone)}</option>`;
+          });
+        }
+      } catch (err) {
+        console.error("fetchPartBTree err", err);
+      }
+    }
+
+    function renderTreeNode(node, depth) {
+      const indent = depth * 20;
+      if (node.type === 'zone') {
+        const childrenHtml = (node.children || []).map(child => renderTreeNode(child, depth + 1)).join('');
+        return `
+          <div class="space-y-1" style="margin-left: ${indent}px;">
+            <div class="flex items-center justify-between p-2.5 rounded-lg bg-slate-900 border border-emerald-900/40 hover:border-emerald-700/60 transition">
+              <div class="flex items-center space-x-2">
+                <span class="text-emerald-400">📁</span>
+                <span class="font-bold text-white text-xs">${escapeHtml(node.name)}</span>
+                <span class="text-[10px] px-1.5 py-0.5 rounded bg-emerald-950 text-emerald-300 border border-emerald-800">ZoneGroup</span>
+              </div>
+              <span class="text-xs font-mono font-bold text-emerald-400">${node.power.toFixed(1)} kW</span>
+            </div>
+            <div class="space-y-1">${childrenHtml}</div>
+          </div>
+        `;
+      } else {
+        return `
+          <div style="margin-left: ${indent}px;" class="flex items-center justify-between p-2 rounded-lg bg-slate-950/60 border border-slate-800 hover:border-slate-700 transition">
+            <div class="flex items-center space-x-2">
+              <span class="text-cyan-400">🏢</span>
+              <span class="text-xs text-slate-300">${escapeHtml(node.name)}</span>
+              <span class="text-[9px] px-1 py-0.5 rounded bg-slate-800 text-slate-400">Building Leaf</span>
+            </div>
+            <span class="text-xs font-mono text-cyan-300">${node.power.toFixed(1)} kW</span>
+          </div>
+        `;
+      }
+    }
+
+    function collectZoneNames(node) {
+      let list = [];
+      if (node.type === 'zone') {
+        list.push(node.name);
+        if (node.children) {
+          node.children.forEach(c => {
+            list = list.concat(collectZoneNames(c));
+          });
+        }
+      }
+      return list;
+    }
+
+    async function addComponentToPartB() {
+      const parentZone = document.getElementById('partB-parentZone').value;
+      const name = document.getElementById('partB-name').value;
+      const power = parseFloat(document.getElementById('partB-power').value) || 0.0;
+
+      if (!name) {
+        alert("Please specify a component name");
+        return;
+      }
+
+      try {
+        const res = await fetch('/api/part-b', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ parentZone, type: partBComponentType, name, power })
+        });
+        const data = await res.json();
+        if (data.success) {
+          document.getElementById('partB-name').value = '';
+          fetchPartBTree();
+        }
+      } catch (err) {
+        alert("Error adding component: " + err.message);
+      }
+    }
+
+
+    function setPartCPreset(severity) {
+      const radios = document.getElementsByName('partC-severity');
+      for (let r of radios) {
+        if (r.value === severity) r.checked = true;
+      }
+      const desc = document.getElementById('partC-desc');
+      if (severity === 'LOW') desc.value = "Streetlight blinking near main gate";
+      else if (severity === 'MEDIUM') desc.value = "Sewage blockage overflow in residential sector";
+      else if (severity === 'HIGH') desc.value = "Industrial gas leak alarm triggered near school";
+    }
+
+    async function submitGrievance() {
+      const complaintId = document.getElementById('partC-id').value;
+      const citizenName = document.getElementById('partC-name').value;
+      const description = document.getElementById('partC-desc').value;
+      let severity = 'LOW';
+      for (let r of document.getElementsByName('partC-severity')) {
+        if (r.checked) severity = r.value;
+      }
+
+      // Animate Chain Nodes
+      resetChainNodes();
+
+      try {
+        const res = await fetch('/api/part-c', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ complaintId, citizenName, description, severity })
+        });
+        const data = await res.json();
+        if (data.success) {
+          highlightChainExecution(severity, data.resolvedBy);
+          const trailContainer = document.getElementById('partC-trail');
+          trailContainer.innerHTML = data.escalationTrail.map(step => `
+            <div class="flex items-start space-x-2">
+              <span class="text-amber-500 font-bold">&bull;</span>
+              <span>${escapeHtml(step)}</span>
+            </div>
+          `).join('');
+
+          // Auto increment ID
+          document.getElementById('partC-id').value = "GRV-00" + (Math.floor(Math.random() * 80) + 10);
+          fetchPartCTickets();
+        }
+      } catch (err) {
+        alert("Error submitting grievance: " + err.message);
+      }
+    }
+
+    function resetChainNodes() {
+      ['frontline', 'supervisor', 'manager'].forEach(node => {
+        const el = document.getElementById('chain-node-' + node);
+        const dot = document.getElementById('chain-dot-' + node);
+        el.className = "p-4 rounded-xl bg-slate-950 border border-slate-800 transition duration-300 relative";
+        dot.className = "w-2.5 h-2.5 rounded-full bg-slate-700";
+      });
+    }
+
+    function highlightChainExecution(severity, resolvedBy) {
+      if (severity === 'LOW') {
+        highlightNode('frontline', 'emerald');
+      } else if (severity === 'MEDIUM') {
+        highlightNode('frontline', 'slate');
+        setTimeout(() => highlightNode('supervisor', 'amber'), 250);
+      } else if (severity === 'HIGH') {
+        highlightNode('frontline', 'slate');
+        setTimeout(() => highlightNode('supervisor', 'slate'), 200);
+        setTimeout(() => highlightNode('manager', 'rose'), 400);
+      }
+    }
+
+    function highlightNode(node, color) {
+      const el = document.getElementById('chain-node-' + node);
+      const dot = document.getElementById('chain-dot-' + node);
+      el.className = `p-4 rounded-xl bg-slate-900 border-2 border-${color}-500 shadow-lg shadow-${color}-500/20 transition duration-300 relative`;
+      dot.className = `w-2.5 h-2.5 rounded-full bg-${color}-500 animate-ping`;
+    }
+
+    async function fetchPartCTickets() {
+      try {
+        const res = await fetch('/api/part-c');
+        const data = await res.json();
+        const tbody = document.getElementById('partC-tickets-table');
+        if (data.success && data.tickets.length > 0) {
+          tbody.innerHTML = data.tickets.map(t => {
+            let color = 'emerald';
+            if (t.severity === 'MEDIUM') color = 'amber';
+            if (t.severity === 'HIGH') color = 'rose';
+            return `
+              <tr class="hover:bg-slate-800/40">
+                <td class="py-2 px-3 font-bold text-amber-400">${escapeHtml(t.complaintId)}</td>
+                <td class="py-2 px-3 text-slate-300">${escapeHtml(t.citizenName)}</td>
+                <td class="py-2 px-3"><span class="px-2 py-0.5 rounded bg-${color}-950 text-${color}-300 border border-${color}-800 text-[10px]">${escapeHtml(t.severity)}</span></td>
+                <td class="py-2 px-3 text-cyan-300">${escapeHtml(t.resolvedBy)}</td>
+                <td class="py-2 px-3 text-slate-500">${escapeHtml(t.createdAt || '')}</td>
+              </tr>
+            `;
+          }).join('');
+        } else {
+          tbody.innerHTML = `<tr><td colspan="5" class="py-4 text-center text-slate-500">No tickets found</td></tr>`;
+        }
+      } catch (err) {
+        console.error("fetchPartCTickets err", err);
+      }
+    }
+
+
+    function syncPartDModelDefaults() {
+      const model = document.getElementById('partD-model').value;
+
+    }
+
+    async function registerStreetlight() {
+      const lightId = document.getElementById('partD-id').value;
+      const model = document.getElementById('partD-model').value;
+      let wattage = 60;
+      let colorTemp = "4000K";
+      if (model.includes("150W")) { wattage = 150; colorTemp = "5000K"; }
+      if (model.includes("80W")) { wattage = 80; colorTemp = "3000K"; }
+
+      const latitude = parseFloat(document.getElementById('partD-lat').value);
+      const longitude = parseFloat(document.getElementById('partD-lng').value);
+      const brightness = parseInt(document.getElementById('partD-bright').value);
+
+      try {
+        const res = await fetch('/api/part-d', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ lightId, model, wattage, colorTemp, latitude, longitude, brightness })
+        });
+        const data = await res.json();
+        if (data.success) {
+          document.getElementById('partD-id').value = "SL-COL-" + String(Math.floor(Math.random() * 800) + 100).padStart(3, '0');
+          fetchPartDStreetlights();
+        }
+      } catch (err) {
+        alert("Error registering streetlight: " + err.message);
+      }
+    }
+
+    async function simulateMassiveStreetlights(count) {
+      try {
+        const res = await fetch('/api/part-d', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ simulateCount: count })
+        });
+        const data = await res.json();
+        if (data.success) {
+          fetchPartDStreetlights();
+        }
+      } catch (err) {
+        alert("Simulation error: " + err.message);
+      }
+    }
+
+    async function fetchPartDStreetlights() {
+      try {
+        const res = await fetch('/api/part-d');
+        const data = await res.json();
+        if (data.success) {
+          const m = data.metrics;
+          document.getElementById('partD-savingsHeader').innerText = m.memorySavedPercent + "%";
+          document.getElementById('partD-totalCount').innerText = m.totalStreetlights.toLocaleString();
+          document.getElementById('partD-poolCount').innerText = m.distinctSharedInstances;
+          document.getElementById('partD-unsharedBytes').innerText = (m.unsharedEstimatedBytes / 1024).toFixed(1) + " KB";
+          document.getElementById('partD-sharedBytes').innerText = (m.sharedEstimatedBytes / 1024).toFixed(1) + " KB";
+
+          const tbody = document.getElementById('partD-table');
+          if (data.streetlights.length > 0) {
+            tbody.innerHTML = data.streetlights.slice(0, 50).map(s => `
+              <tr class="hover:bg-slate-800/40">
+                <td class="py-2 px-3 font-bold text-violet-400">${escapeHtml(s.lightId)}</td>
+                <td class="py-2 px-3 text-slate-300">${escapeHtml(s.model)}</td>
+                <td class="py-2 px-3 text-slate-400">${s.wattage}W (${escapeHtml(s.colorTemp)})</td>
+                <td class="py-2 px-3 text-slate-400">(${s.latitude.toFixed(4)}, ${s.longitude.toFixed(4)})</td>
+                <td class="py-2 px-3 text-cyan-400">${s.brightness}%</td>
+                <td class="py-2 px-3"><span class="px-2 py-0.5 rounded bg-violet-950/80 text-violet-300 border border-violet-800 font-bold">${escapeHtml(s.sharedHash)}</span></td>
+              </tr>
+            `).join('');
+          } else {
+            tbody.innerHTML = `<tr><td colspan="6" class="py-4 text-center text-slate-500">No streetlights in fleet</td></tr>`;
+          }
+        }
+      } catch (err) {
+        console.error("fetchPartDStreetlights err", err);
+      }
+    }
+
+
+    async function evaluateInterpreterAST() {
+      const quota = parseInt(document.getElementById('partE-quota').value) || 800;
+      const zoneA = parseInt(document.getElementById('partE-zoneA').value) || 120;
+      const zoneB = parseInt(document.getElementById('partE-zoneB').value) || 180;
+      const zoneC = parseInt(document.getElementById('partE-zoneC').value) || 350;
+
+      try {
+        const res = await fetch('/api/part-e', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ quota, zoneA, zoneB, zoneC })
+        });
+        const data = await res.json();
+        if (data.success) {
+          const ev = data.evaluation;
+          document.getElementById('partE-marginHeader').innerText = ev.remainingQuotaMargin + " kW";
+          const badge = document.getElementById('partE-complianceBadge');
+          if (ev.isCompliant) {
+            badge.className = "px-2.5 py-1 rounded text-xs font-mono font-bold bg-emerald-950 text-emerald-300 border border-emerald-800";
+            badge.innerText = "WITHIN_QUOTA (COMPLIANT)";
+          } else {
+            badge.className = "px-2.5 py-1 rounded text-xs font-mono font-bold bg-rose-950 text-rose-300 border border-rose-800";
+            badge.innerText = "QUOTA_EXCEEDED (ALERT)";
+          }
+
+          const astContainer = document.getElementById('partE-astContainer');
+          astContainer.innerHTML = renderASTNode(ev.astTree);
+
+
+          const stepsContainer = document.getElementById('partE-steps');
+          stepsContainer.innerHTML = ev.steps.map(s => `
+            <div class="flex items-start space-x-2">
+              <span class="text-pink-500 font-bold">&bull;</span>
+              <span>${escapeHtml(s)}</span>
+            </div>
+          `).join('');
+        }
+      } catch (err) {
+        console.error("evaluateInterpreterAST err", err);
+      }
+    }
+
+    function renderASTNode(node) {
+      if (!node) return '';
+      if (node.type === 'TerminalExpression') {
+        return `
+          <div class="p-3 rounded-xl bg-slate-900 border border-cyan-800 text-center shadow">
+            <span class="text-[10px] text-cyan-400 uppercase tracking-wider block">TerminalExpression</span>
+            <span class="text-xs text-slate-300 block">${escapeHtml(node.label)}</span>
+            <span class="text-sm font-bold text-white font-mono mt-1 block">${escapeHtml(node.value)}</span>
+          </div>
+        `;
+      } else {
+        const leftHtml = renderASTNode(node.left);
+        const rightHtml = renderASTNode(node.right);
+        return `
+          <div class="flex flex-col items-center space-y-3 w-full">
+            <div class="p-3 rounded-xl bg-slate-900 border-2 border-pink-600 text-center shadow-lg shadow-pink-500/10 min-w-[220px]">
+              <span class="text-[10px] text-pink-400 font-bold block">${escapeHtml(node.operator)}</span>
+              <span class="text-xs text-slate-200 block">${escapeHtml(node.rule || node.label)}</span>
+              <span class="text-sm font-extrabold text-pink-300 font-mono mt-1 block">= ${escapeHtml(node.result)}</span>
+            </div>
+            <div class="flex justify-center items-start gap-4 w-full">
+              ${leftHtml ? `<div class="flex-1 flex justify-center">${leftHtml}</div>` : ''}
+              ${rightHtml ? `<div class="flex-1 flex justify-center">${rightHtml}</div>` : ''}
+            </div>
+          </div>
+        `;
+      }
+    }
+
+    function escapeHtml(str) {
+      if (!str) return '';
+      return String(str)
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;')
+        .replace(/'/g, '&#039;');
+    }
+
+
+    window.addEventListener('DOMContentLoaded', () => {
+      updatePartAPipelinePreview();
+      fetchPartALogs();
+    });
+  </script>
+</body>
+</html>

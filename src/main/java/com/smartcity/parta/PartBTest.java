@@ -26,6 +26,10 @@ class Building implements SmartZoneComponent{
     public double getPowerConsumption() {
         return this.powerConsumption;
     }
+
+    public String getName() {
+        return this.name;
+    }
 }
 
 class ZoneGroup implements SmartZoneComponent{
@@ -44,6 +48,14 @@ class ZoneGroup implements SmartZoneComponent{
 
     public void remove(SmartZoneComponent component){
         this.components.remove(component);
+    }
+
+    public String getName() {
+        return this.name;
+    }
+
+    public ArrayList<SmartZoneComponent> getComponents() {
+        return this.components;
     }
 
     @Override
@@ -66,9 +78,6 @@ class ZoneGroup implements SmartZoneComponent{
         return total;
     }
 }
-
-
-
 
 
 
@@ -108,10 +117,6 @@ public class PartBTest {
 
 
     }
-
-
-
-
 
 
 

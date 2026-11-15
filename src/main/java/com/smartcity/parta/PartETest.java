@@ -15,6 +15,10 @@ class TerminalExpression implements Expression{
     public int interpret() {
         return value;
     }
+
+    public int getValue() {
+        return value;
+    }
 }
 
 class NonTerminalExpression1 implements Expression{
@@ -31,6 +35,14 @@ class NonTerminalExpression1 implements Expression{
     public int interpret() {
         return e1.interpret() + e2.interpret();
     }
+
+    public Expression getE1() {
+        return e1;
+    }
+
+    public Expression getE2() {
+        return e2;
+    }
 }
 
 class NonTerminalExpression2 implements Expression{
@@ -46,6 +58,14 @@ class NonTerminalExpression2 implements Expression{
     @Override
     public int interpret() {
         return e1.interpret() - e2.interpret();
+    }
+
+    public Expression getE1() {
+        return e1;
+    }
+
+    public Expression getE2() {
+        return e2;
     }
 }
 
